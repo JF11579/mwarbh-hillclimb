@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mount Washington Auto Road Bicycle Hillclimb</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="header-title">
+        <h1>Mount Washington<br>Auto Road<br><span class="gold">Bicycle Hillclimb</span></h1>
+        <p class="header-sub">August 15, 2026 &bull; Rain Date: August 16</p>
+      </div>
+      <div class="header-meta">
+        <span class="stat">7.6 mi</span>
+        <span class="stat-label">ALL UPHILL</span>
+        <span class="stat">6,288 ft</span>
+        <span class="stat-label">SUMMIT ELEV.</span>
+        <span class="stat">~12%</span>
+        <span class="stat-label">AVG GRADE</span>
+      </div>
+    </div>
+  </header>
+
+  <nav class="tab-nav" role="navigation" aria-label="Main navigation">
+    <button class="tab-btn active" data-tab="status">Race Status</button>
+    <button class="tab-btn" data-tab="weather">Weather</button>
+    <button class="tab-btn" data-tab="info">Race Info</button>
+    <button class="tab-btn" data-tab="register">Register</button>
+    <button class="tab-btn" data-tab="merch">Merch</button>
+    <button class="tab-btn" data-tab="sponsors">Sponsors</button>
+  </nav>
+
+  <main class="tab-content">
+
+    <!-- ==================== RACE STATUS ==================== -->
+    <section id="tab-status" class="tab-panel active">
+      <div class="status-wrap">
+        <div class="race-status-banner status-on" id="race-banner">
+          <div class="status-icon">&#9650;</div>
+          <div class="status-text">
+            <span class="status-label">RACE STATUS</span>
+            <span class="status-main" id="status-main">RACE IS ON</span>
+          </div>
+        </div>
+
+        <div class="status-details">
+          <div class="status-card">
+            <h3>Start Time</h3>
+            <p>7:00 AM — Mass Start<br>Staging opens 5:30 AM</p>
+          </div>
+          <div class="status-card">
+            <h3>Check-In</h3>
+            <p>Friday Aug 14: 3–8 PM<br>Saturday Aug 15: 5–6:30 AM<br>Glen House (base)</p>
+          </div>
+          <div class="status-card">
+            <h3>Results</h3>
+            <p>Posted at summit &amp; finish line.<br>Official results online within 2 hrs.</p>
+          </div>
+          <div class="status-card">
+            <h3>Course Closure</h3>
+            <p>Auto Road closed to vehicles<br>during race: 6:00 AM – ~12:00 PM</p>
+          </div>
+        </div>
+
+        <div class="status-note">
+          <p>Status updates are posted here and on the <a href="https://www.mwarbh.org" target="_blank" rel="noopener">official MWARBH site</a>. Race-day decisions are made by 5:00 AM based on summit weather and road conditions.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== WEATHER ==================== -->
+    <section id="tab-weather" class="tab-panel">
+      <div class="weather-wrap">
+        <div class="weather-header">
+          <h2>Race Day Conditions</h2>
+          <p class="weather-note">Live data from Open-Meteo. Summit: 6,288 ft &bull; Base: ~1,600 ft</p>
+          <button class="refresh-btn" id="refresh-weather" onclick="fetchWeather()">&#8635; Refresh</button>
+        </div>
+
+        <div class="weather-grid">
+          <!-- SUMMIT -->
+          <div class="weather-station">
+            <div class="station-label">
+              <span class="station-icon">&#9651;</span>
+              <span>SUMMIT &bull; 6,288 ft</span>
+            </div>
+            <div class="weather-main" id="summit-main">
+              <div class="loading-spinner">Loading…</div>
+            </div>
+            <div class="weather-details" id="summit-details"></div>
+          </div>
+
+          <!-- BASE -->
+          <div class="weather-station">
+            <div class="station-label">
+              <span class="station-icon">&#9650;</span>
+              <span>BASE (Glen House) &bull; ~1,600 ft</span>
+            </div>
+            <div class="weather-main" id="base-main">
+              <div class="loading-spinner">Loading…</div>
+            </div>
+            <div class="weather-details" id="base-details"></div>
+          </div>
+        </div>
+
+        <div class="weather-disclaimer">
+          <p>Summit conditions can change rapidly. Wind gusts above 50 mph may affect race safety decisions. Always check <a href="https://www.mountwashington.org/experience-the-weather/higher-summits-forecast/" target="_blank" rel="noopener">Mt. Washington Observatory</a> for official summit forecasts.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== RACE INFO ==================== -->
+    <section id="tab-info" class="tab-panel">
+      <div class="info-wrap">
+        <h2>About the Race</h2>
+        <div class="info-grid">
+          <div class="info-block">
+            <h3>The Course</h3>
+            <ul>
+              <li>7.6 miles, entirely uphill</li>
+              <li>Start: Auto Road Toll House (base, ~1,600 ft)</li>
+              <li>Finish: Mt. Washington Summit (6,288 ft)</li>
+              <li>4,688 ft of climbing</li>
+              <li>Average grade: ~12%</li>
+              <li>Maximum grade: ~22%</li>
+              <li>Unpaved sections in upper miles</li>
+            </ul>
+          </div>
+          <div class="info-block">
+            <h3>Race Day — August 15, 2026</h3>
+            <ul>
+              <li>Rain Date: Sunday, August 16, 2026</li>
+              <li>Check-in: Friday Aug 14, 3–8 PM</li>
+              <li>Check-in: Saturday Aug 15, 5–6:30 AM</li>
+              <li>Staging opens: 5:30 AM</li>
+              <li>Mass start: 7:00 AM</li>
+              <li>Course closes: ~12:00 PM</li>
+              <li>Awards ceremony: ~1:00 PM at base</li>
+            </ul>
+          </div>
+          <div class="info-block">
+            <h3>Registration Timeline</h3>
+            <ul>
+              <li><strong>Opens:</strong> Spring 2026 (via BikeReg)</li>
+              <li><strong>Early Bird:</strong> Limited spots, first-come</li>
+              <li><strong>General:</strong> Until sellout or July 31</li>
+              <li><strong>Waitlist:</strong> Available after sellout</li>
+              <li><strong>Cap:</strong> ~600 riders</li>
+            </ul>
+          </div>
+          <div class="info-block">
+            <h3>Categories</h3>
+            <ul>
+              <li>Open Men / Open Women</li>
+              <li>Age groups: 19–29, 30–39, 40–49, 50–59, 60+</li>
+              <li>Tandem division</li>
+              <li>Singlespeed / Fixed gear</li>
+              <li>Clydesdale (200+ lbs)</li>
+            </ul>
+          </div>
+          <div class="info-block">
+            <h3>What to Expect</h3>
+            <ul>
+              <li>No descent — all riders transported down</li>
+              <li>Support vehicles allowed on course</li>
+              <li>Feed zones at miles 4 and 6</li>
+              <li>Medical support on course</li>
+              <li>Summit finish — world-famous views</li>
+            </ul>
+          </div>
+          <div class="info-block">
+            <h3>Official Links</h3>
+            <ul>
+              <li><a href="https://www.mwarbh.org" target="_blank" rel="noopener">mwarbh.org — Official Race Site</a></li>
+              <li><a href="https://www.mountwashington.org" target="_blank" rel="noopener">Mt. Washington Auto Road</a></li>
+              <li><a href="https://www.mountwashington.org/experience-the-weather/" target="_blank" rel="noopener">Mt. Washington Observatory</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== REGISTER ==================== -->
+    <section id="tab-register" class="tab-panel">
+      <div class="register-wrap">
+        <h2>Registration</h2>
+        <div class="register-cta">
+          <p class="register-lead">Registration is managed through BikeReg.com. Spots fill fast — typically within hours of opening.</p>
+          <a href="https://www.bikereg.com/mount-washington" target="_blank" rel="noopener" class="cta-btn">Register on BikeReg.com &#8599;</a>
+        </div>
+
+        <div class="faq-grid">
+          <div class="faq-block">
+            <h3>Eligibility</h3>
+            <ul>
+              <li>Minimum age: 18 on race day</li>
+              <li>Valid USAC license or one-day license (available at check-in)</li>
+              <li>Road, mountain, gravel, cyclocross, or fixed-gear bikes permitted</li>
+              <li>No e-bikes</li>
+              <li>Helmet required (CPSC or CE EN 1078 certified)</li>
+            </ul>
+          </div>
+          <div class="faq-block">
+            <h3>Fees (approximate)</h3>
+            <ul>
+              <li>Early bird: ~$70</li>
+              <li>General: ~$80–$90</li>
+              <li>One-day USAC license: ~$15 (if needed)</li>
+              <li>No day-of registration</li>
+            </ul>
+          </div>
+          <div class="faq-block">
+            <h3>What's Included</h3>
+            <ul>
+              <li>Race number and timing chip</li>
+              <li>Post-race meal at summit</li>
+              <li>Transport down from summit</li>
+              <li>Finisher certificate</li>
+              <li>Category prizes / awards</li>
+            </ul>
+          </div>
+          <div class="faq-block">
+            <h3>Transfers &amp; Refunds</h3>
+            <ul>
+              <li>Transfers accepted until ~2 weeks before race</li>
+              <li>No refunds after registration closes</li>
+              <li>Waitlist transfers honored as slots open</li>
+              <li>Contact: <a href="mailto:info@mwarbh.org">info@mwarbh.org</a></li>
+            </ul>
+          </div>
+          <div class="faq-block">
+            <h3>Gear Check</h3>
+            <ul>
+              <li>Bikes checked by officials at check-in</li>
+              <li>Working brakes required</li>
+              <li>Lights recommended for low-visibility summit</li>
+              <li>Warm layers — summit temp often 20°F cooler than base</li>
+            </ul>
+          </div>
+          <div class="faq-block">
+            <h3>Support Crew</h3>
+            <ul>
+              <li>Support vehicles must register separately</li>
+              <li>One vehicle per rider maximum</li>
+              <li>Pass required for course access</li>
+              <li>Parking limited — carpool encouraged</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== MERCH ==================== -->
+    <section id="tab-merch" class="tab-panel">
+      <div class="merch-wrap">
+        <h2>Memorabilia &amp; Apparel</h2>
+        <p class="merch-lead">Commemorate your summit. Official MWARBH gear available at check-in and online while supplies last.</p>
+
+        <div class="merch-grid">
+          <div class="merch-item">
+            <div class="merch-img merch-img-jersey">
+              <span class="merch-placeholder">&#9651;</span>
+            </div>
+            <h3>2026 Race Jersey</h3>
+            <p>Sublimated race-cut jersey. Summit graphic, year-specific design. Sizes XS–4XL.</p>
+            <span class="merch-price">$75</span>
+          </div>
+          <div class="merch-item">
+            <div class="merch-img merch-img-vest">
+              <span class="merch-placeholder">&#9651;</span>
+            </div>
+            <h3>Summit Wind Vest</h3>
+            <p>Lightweight packable wind vest. Essential for the descent. MWARBH logo.</p>
+            <span class="merch-price">$55</span>
+          </div>
+          <div class="merch-item">
+            <div class="merch-img merch-img-bottle">
+              <span class="merch-placeholder">&#9651;</span>
+            </div>
+            <h3>Insulated Water Bottle</h3>
+            <p>20 oz stainless. Mt. Washington summit graphic. Gold &amp; black.</p>
+            <span class="merch-price">$28</span>
+          </div>
+          <div class="merch-item">
+            <div class="merch-img merch-img-cap">
+              <span class="merch-placeholder">&#9651;</span>
+            </div>
+            <h3>Cycling Cap</h3>
+            <p>Classic 6-panel cap. Cotton blend. "6288 ft" embroidered. One size.</p>
+            <span class="merch-price">$22</span>
+          </div>
+          <div class="merch-item">
+            <div class="merch-img merch-img-print">
+              <span class="merch-placeholder">&#9651;</span>
+            </div>
+            <h3>Limited Edition Print</h3>
+            <p>12×18 archival print of the Auto Road course profile. Numbered series, signed by artist.</p>
+            <span class="merch-price">$40</span>
+          </div>
+          <div class="merch-item">
+            <div class="merch-img merch-img-sticker">
+              <span class="merch-placeholder">&#9651;</span>
+            </div>
+            <h3>Sticker Pack</h3>
+            <p>Set of 4 weatherproof vinyl stickers. Summit, course profile, logo, elevation graphics.</p>
+            <span class="merch-price">$10</span>
+          </div>
+        </div>
+
+        <div class="merch-note">
+          <p>Pre-orders open with registration. Items also available at check-in (limited quantities). Contact <a href="mailto:merch@mwarbh.org">merch@mwarbh.org</a> for bulk or custom orders.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SPONSORS ==================== -->
+    <section id="tab-sponsors" class="tab-panel">
+      <div class="sponsors-wrap">
+        <h2>Partners &amp; Sponsors</h2>
+        <p class="sponsors-lead">MWARBH is made possible by the support of local businesses and cycling partners in the White Mountains region.</p>
+
+        <div class="sponsor-tier">
+          <h3 class="tier-label gold-label">Presenting Sponsors</h3>
+          <div class="sponsor-grid">
+            <div class="sponsor-card">
+              <div class="sponsor-logo-placeholder">
+                <span>LOGO</span>
+              </div>
+              <h4>Mount Washington Auto Road</h4>
+              <p>Race venue. Providing course access, logistics, and summit facilities since the race's founding.</p>
+              <a href="https://www.mountwashington.org" target="_blank" rel="noopener" class="sponsor-link">mountwashington.org &#8599;</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="sponsor-tier">
+          <h3 class="tier-label silver-label">Official Hotels &amp; Lodging</h3>
+          <div class="sponsor-grid">
+            <div class="sponsor-card">
+              <div class="sponsor-logo-placeholder"><span>LOGO</span></div>
+              <h4>The Glen House</h4>
+              <p>Base camp hotel directly adjacent to the Auto Road start. Closest lodging to race start. Book early — fills race weekend.</p>
+              <a href="https://www.theglenhouse.com" target="_blank" rel="noopener" class="sponsor-link">theglenhouse.com &#8599;</a>
+            </div>
+            <div class="sponsor-card">
+              <div class="sponsor-logo-placeholder"><span>LOGO</span></div>
+              <h4>Wildcat Inn &amp; Tavern</h4>
+              <p>Jackson Village. 20 min from base. Rider-friendly, post-race dining on site.</p>
+              <a href="https://www.wildcatinnandtavern.com" target="_blank" rel="noopener" class="sponsor-link">wildcatinnandtavern.com &#8599;</a>
+            </div>
+            <div class="sponsor-card">
+              <div class="sponsor-logo-placeholder"><span>LOGO</span></div>
+              <h4>Wentworth Inn</h4>
+              <p>Jackson. Historic inn, 25 min from base. Group rates available for teams.</p>
+              <a href="https://www.thewentworth.com" target="_blank" rel="noopener" class="sponsor-link">thewentworth.com &#8599;</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="sponsor-tier">
+          <h3 class="tier-label bronze-label">Bike Shops &amp; Gear</h3>
+          <div class="sponsor-grid">
+            <div class="sponsor-card">
+              <div class="sponsor-logo-placeholder"><span>LOGO</span></div>
+              <h4>Joe Jones Ski &amp; Bike</h4>
+              <p>North Conway. Full service shop. Race week tune-ups, emergency repairs, parts. Rider discount with bib.</p>
+              <a href="https://www.joejones.com" target="_blank" rel="noopener" class="sponsor-link">joejones.com &#8599;</a>
+            </div>
+            <div class="sponsor-card">
+              <div class="sponsor-logo-placeholder"><span>LOGO</span></div>
+              <h4>Cranmore Mountain Sports</h4>
+              <p>North Conway. Rental bikes, gear, accessories. Open early race weekend.</p>
+              <a href="#" class="sponsor-link">cranmoremountainsports.com &#8599;</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="sponsor-tier">
+          <h3 class="tier-label bronze-label">Restaurants &amp; Recovery Fuel</h3>
+          <div class="sponsor-grid">
+            <div class="sponsor-card">
+              <div class="sponsor-logo-placeholder"><span>LOGO</span></div>
+              <h4>Moat Mountain Smokehouse &amp; Brewing</h4>
+              <p>North Conway. Post-race tradition. Craft beer, massive burgers. Rider discount race weekend.</p>
+              <a href="https://www.moatmountain.com" target="_blank" rel="noopener" class="sponsor-link">moatmountain.com &#8599;</a>
+            </div>
+            <div class="sponsor-card">
+              <div class="sponsor-logo-placeholder"><span>LOGO</span></div>
+              <h4>Flatbread Company</h4>
+              <p>North Conway. Wood-fired pizza. Group-friendly, open late on race day.</p>
+              <a href="#" class="sponsor-link">flatbreadcompany.com &#8599;</a>
+            </div>
+            <div class="sponsor-card">
+              <div class="sponsor-logo-placeholder"><span>LOGO</span></div>
+              <h4>Delaney's Hole in the Wall</h4>
+              <p>Jackson Village. Classic New England pub. Rider-friendly atmosphere, solid food.</p>
+              <a href="#" class="sponsor-link">delaneysjackson.com &#8599;</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="sponsor-cta">
+          <p>Interested in sponsoring MWARBH 2026?</p>
+          <a href="mailto:sponsors@mwarbh.org" class="cta-btn-outline">Contact Us About Sponsorship</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p>&copy; 2026 Mount Washington Auto Road Bicycle Hillclimb &bull; <a href="https://www.mwarbh.org" target="_blank" rel="noopener">mwarbh.org</a></p>
+      <p class="footer-sub">Race Day: August 15, 2026 &bull; Rain Date: August 16, 2026</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
