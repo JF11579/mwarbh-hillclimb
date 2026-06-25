@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MWARBH 2026 — Carpool Assigner</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:          #0d0d0d;
+      --bg-card:     #161616;
+      --bg-card-2:   #1e1e1e;
+      --border:      #2a2a2a;
+      --border-gold: rgba(212,175,55,0.3);
+      --gold:        #d4af37;
+      --gold-light:  #f0d060;
+      --white:       #f5f5f5;
+      --muted:       #8a8a8a;
+      --danger:      #c0392b;
+      --success:     #27ae60;
+      --font-head:   'Oswald', sans-serif;
+      --font-body:   'Inter', sans-serif;
+      --radius:      4px;
+      --transition:  0.18s ease;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--white); font-family: var(--font-body); font-size: 15px; line-height: 1.6; min-height: 100vh; }
+    a { color: var(--gold); }
+
+    /* ── Header ── */
+    .site-header {
+      background: linear-gradient(180deg, #050505 0%, #0a0a0a 60%, #111 100%);
+      border-bottom: 1px solid var(--border-gold);
+      padding: 28px 24px 22px;
+    }
+    .header-inner { max-width: 960px; margin: 0 auto; }
+    .header-inner h1 {
+      font-family: var(--font-head);
+      font-size: clamp(20px, 3.5vw, 34px);
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      line-height: 1.15;
+    }
+    .header-inner h1 .gold { color: var(--gold); }
+    .header-sub { margin-top: 8px; font-size: 13px; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; }
+
+    /* ── Layout ── */
+    .main-content { max-width: 960px; margin: 0 auto; padding: 36px 24px 60px; display: flex; flex-direction: column; gap: 28px; }
+
+    .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 26px 28px; }
+    .card-gold { border-color: var(--border-gold); }
+
+    .section-title {
+      font-family: var(--font-head);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 18px;
+    }
+
+    /* ── Mode tabs ── */
+    .mode-tabs { display: flex; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; width: fit-content; margin-bottom: 20px; }
+    .mode-btn {
+      padding: 10px 22px;
+      background: none;
+      border: none;
+      border-right: 1px solid var(--border);
+      color: var(--muted);
+      font-family: var(--font-head);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+    .mode-btn:last-child { border-right: none; }
+    .mode-btn.active { background: rgba(212,175,55,0.08); color: var(--gold); }
+    .mode-btn:hover:not(.active) { color: var(--white); background: rgba(255,255,255,0.03); }
+
+    /* ── Demo info ── */
+    .info-box {
+      background: var(--bg-card-2);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--gold);
+      border-radius: var(--radius);
+      padding: 14px 18px;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+    .info-box strong { color: var(--white); }
+
+    /* ── Upload panel ── */
+    .upload-instructions { font-size: 13px; color: var(--muted); line-height: 1.7; margin-bottom: 16px; }
+    .upload-instructions code {
+      background: var(--bg-card-2);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 1px 6px;
+      font-size: 12px;
+      color: var(--white);
+      font-family: 'Courier New', monospace;
+    }
+    .file-upload-row { display: flex; align-items: center; gap: 16px; margin-bottom: 14px; flex-wrap: wrap; }
+    .file-label {
+      display: inline-block;
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--muted);
+      font-family: var(--font-head);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 10px 18px;
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+    .file-label:hover { border-color: var(--gold); color: var(--gold); }
+    .file-label input { display: none; }
+    .upload-or { font-size: 12px; color: var(--muted); }
+    #csv-paste {
+      width: 100%;
+      background: var(--bg-card-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--white);
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      padding: 12px 14px;
+      resize: vertical;
+      min-height: 140px;
+      outline: none;
+      transition: border-color var(--transition);
+    }
+    #csv-paste:focus { border-color: var(--gold); }
+
+    /* ── Run button ── */
+    .run-btn {
+      margin-top: 20px;
+      display: inline-block;
+      background: var(--gold);
+      color: #0d0d0d;
+      font-family: var(--font-head);
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 16px 40px;
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: background var(--transition), transform var(--transition);
+    }
+    .run-btn:hover { background: var(--gold-light); transform: translateY(-1px); }
+
+    /* ── Stats ── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    .stat-card { background: var(--bg-card-2); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; }
+    .stat-label { font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 4px; }
+    .stat-val { font-family: var(--font-head); font-size: 28px; font-weight: 700; color: var(--gold); line-height: 1; display: block; }
+    .stat-sub { font-size: 11px; color: var(--muted); display: block; margin-top: 4px; }
+
+    /* ── Table ── */
+    .table-wrap {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: auto;
+      max-height: 420px;
+      margin-bottom: 24px;
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    thead { position: sticky; top: 0; z-index: 1; }
+    thead th {
+      background: #111;
+      padding: 10px 14px;
+      text-align: left;
+      font-family: var(--font-head);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold);
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    tbody tr { border-bottom: 1px solid var(--border); }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: rgba(255,255,255,0.02); }
+    td { padding: 9px 14px; vertical-align: middle; white-space: nowrap; }
+    td.muted { color: var(--muted); }
+    .car-swatch { display: inline-block; width: 9px; height: 9px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.15); vertical-align: middle; margin-right: 6px; flex-shrink: 0; }
+
+    /* ── Download bar ── */
+    .download-bar { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+    .download-btn {
+      display: inline-block;
+      background: none;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      font-family: var(--font-head);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 12px 26px;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+    .download-btn:hover { background: rgba(212,175,55,0.1); color: var(--gold-light); }
+    .download-note { font-size: 12px; color: var(--muted); }
+
+    /* ── Footer ── */
+    .site-footer { background: #080808; border-top: 1px solid var(--border); padding: 20px 24px; margin-top: 40px; }
+    .footer-inner { max-width: 960px; margin: 0 auto; font-size: 12px; color: var(--muted); text-align: center; }
+
+    @media (max-width: 600px) {
+      .main-content { padding: 24px 16px 48px; }
+      .card { padding: 20px; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <h1>Mount Washington Auto Road<br><span class="gold">Carpool Assigner</span></h1>
+    <p class="header-sub">MWARBH 2026 &bull; Internal Organizer Tool</p>
+  </div>
+</header>
+
+<main class="main-content">
+
+  <!-- ── INPUT ── -->
+  <div class="card card-gold">
+    <div class="section-title">Rider Data</div>
+
+    <div class="mode-tabs">
+      <button class="mode-btn active" id="btn-demo"   onclick="setMode('demo')">Demo Data (550 riders)</button>
+      <button class="mode-btn"        id="btn-upload" onclick="setMode('upload')">Upload Your CSV</button>
+    </div>
+
+    <div id="demo-panel">
+      <div class="info-box">
+        <strong>550 fake riders pre-loaded</strong> — 300 drivers with cars, 250 passengers needing a ride. Zip codes spread across NH, VT, ME, MA, CT, NY, and RI, weighted toward New Hampshire and Massachusetts. Click the button to run the assignment.
+      </div>
+    </div>
+
+    <div id="upload-panel" style="display:none;">
+      <p class="upload-instructions">
+        Upload your BikeReg export as a CSV with these columns (in order):<br>
+        <code>Name</code> &nbsp;<code>Last4</code> &nbsp;<code>Zip</code> &nbsp;<code>Role</code> (Driver or Passenger) &nbsp;<code>CarColor</code> &nbsp;<code>CarMake</code> &nbsp;<code>CarModel</code> &nbsp;<code>Plate</code> &nbsp;<code>DriverCell</code><br><br>
+        Drivers need all car columns filled. Passengers leave car columns blank. First row may be a header — it will be skipped automatically.
+      </p>
+      <div class="file-upload-row">
+        <label class="file-label">
+          Choose CSV File
+          <input type="file" id="csv-file" accept=".csv" onchange="handleFile(this)" />
+        </label>
+        <span class="upload-or">or paste below</span>
+      </div>
+      <textarea id="csv-paste" placeholder="Name,Last4,Zip,Role,CarColor,CarMake,CarModel,Plate,DriverCell
+Jane Smith,4721,03801,Driver,White,Subaru,Outback,NH 123-ABC,(603) 555-0000
+Bob Jones,8830,02138,Passenger,,,,,"  rows="8"></textarea>
+    </div>
+
+    <button class="run-btn" onclick="runAssignment()">&#9651;&nbsp; Assign Riders to Cars</button>
+  </div>
+
+  <!-- ── RESULTS ── -->
+  <div id="results-section" style="display:none;">
+    <div class="card">
+      <div class="section-title">Assignment Results</div>
+      <div class="stats-grid" id="stats-grid"></div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Passenger</th>
+              <th>Pax Zip</th>
+              <th>Driver</th>
+              <th>Driver Zip</th>
+              <th>Dist</th>
+              <th>Vehicle</th>
+              <th>Plate</th>
+              <th>Driver Cell</th>
+            </tr>
+          </thead>
+          <tbody id="results-tbody"></tbody>
+        </table>
+      </div>
+      <div class="download-bar">
+        <button class="download-btn" onclick="downloadCSV()">&#8595;&nbsp; Download Assignment CSV</button>
+        <p class="download-note">Formatted and ready to load into the Ride Down app.</p>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">MWARBH 2026 &bull; Carpool Assigner &bull; Internal organizer tool &bull; No data leaves your browser</div>
+</footer>
+
+<script>
+// ============================================================
+// ZIP CODE TABLE  (lat/lng for haversine matching)
+// ============================================================
+const ZIPS = {
+  '03031': {lat:42.8651,lng:-71.7245,state:'NH',area:'603'},
+  '03038': {lat:42.8807,lng:-71.3227,state:'NH',area:'603'},
+  '03060': {lat:42.7654,lng:-71.4676,state:'NH',area:'603'},
+  '03079': {lat:42.7898,lng:-71.2007,state:'NH',area:'603'},
+  '03110': {lat:42.9459,lng:-71.5176,state:'NH',area:'603'},
+  '03301': {lat:43.2081,lng:-71.5376,state:'NH',area:'603'},
+  '03431': {lat:42.9337,lng:-72.2779,state:'NH',area:'603'},
+  '03570': {lat:44.4687,lng:-71.1851,state:'NH',area:'603'},
+  '03755': {lat:43.7022,lng:-72.2896,state:'NH',area:'603'},
+  '03801': {lat:43.0718,lng:-70.7626,state:'NH',area:'603'},
+  '03820': {lat:43.1979,lng:-70.8737,state:'NH',area:'603'},
+  '03461': {lat:42.8737,lng:-71.9573,state:'NH',area:'603'},
+  '03833': {lat:42.9812,lng:-70.9478,state:'NH',area:'603'},
+  '05001': {lat:43.6487,lng:-72.3190,state:'VT',area:'802'},
+  '05201': {lat:42.8787,lng:-73.1968,state:'VT',area:'802'},
+  '05301': {lat:42.8509,lng:-72.5579,state:'VT',area:'802'},
+  '05401': {lat:44.4759,lng:-73.2121,state:'VT',area:'802'},
+  '05602': {lat:44.2601,lng:-72.5754,state:'VT',area:'802'},
+  '05701': {lat:43.6106,lng:-72.9726,state:'VT',area:'802'},
+  '04046': {lat:43.3845,lng:-70.5447,state:'ME',area:'207'},
+  '04101': {lat:43.6591,lng:-70.2568,state:'ME',area:'207'},
+  '04210': {lat:44.0987,lng:-70.2312,state:'ME',area:'207'},
+  '04401': {lat:44.8012,lng:-68.7778,state:'ME',area:'207'},
+  '04609': {lat:44.3876,lng:-68.2039,state:'ME',area:'207'},
+  '01002': {lat:42.3732,lng:-72.5199,state:'MA',area:'413'},
+  '01060': {lat:42.3251,lng:-72.6412,state:'MA',area:'413'},
+  '01420': {lat:42.5834,lng:-71.8023,state:'MA',area:'978'},
+  '01701': {lat:42.2793,lng:-71.4162,state:'MA',area:'508'},
+  '01801': {lat:42.4795,lng:-71.1522,state:'MA',area:'781'},
+  '01902': {lat:42.4668,lng:-70.9495,state:'MA',area:'781'},
+  '02101': {lat:42.3601,lng:-71.0589,state:'MA',area:'617'},
+  '02138': {lat:42.3736,lng:-71.1097,state:'MA',area:'617'},
+  '02492': {lat:42.2793,lng:-71.2373,state:'MA',area:'781'},
+  '02703': {lat:41.9445,lng:-71.2856,state:'MA',area:'508'},
+  '06101': {lat:41.7637,lng:-72.6851,state:'CT',area:'860'},
+  '06801': {lat:41.3712,lng:-73.4140,state:'CT',area:'203'},
+  '06901': {lat:41.0534,lng:-73.5387,state:'CT',area:'203'},
+  '12201': {lat:42.6526,lng:-73.7562,state:'NY',area:'518'},
+  '12866': {lat:43.0831,lng:-73.7846,state:'NY',area:'518'},
+  '12601': {lat:41.7004,lng:-73.9209,state:'NY',area:'845'},
+  '02901': {lat:41.8240,lng:-71.4128,state:'RI',area:'401'},
+  '02840': {lat:41.4901,lng:-71.3128,state:'RI',area:'401'},
+};
+
+// ============================================================
+// DEMO DATA GENERATION  (seeded — same result every run)
+// ============================================================
+const FIRST_NAMES = ['James','Mary','John','Patricia','Robert','Jennifer','Michael','Linda','William','Barbara','David','Elizabeth','Richard','Susan','Joseph','Jessica','Thomas','Sarah','Charles','Karen','Christopher','Lisa','Daniel','Nancy','Matthew','Betty','Anthony','Margaret','Mark','Sandra','Donald','Ashley','Steven','Dorothy','Paul','Kimberly','Andrew','Emily','Kenneth','Donna','Joshua','Michelle','Kevin','Carol','Brian','Amanda','George','Melissa','Timothy','Deborah','Ronald','Stephanie','Edward','Rebecca','Jason','Sharon','Jeffrey','Laura','Ryan','Cynthia','Jacob','Kathleen','Gary','Amy','Nicholas','Angela','Eric','Shirley','Jonathan','Anna','Stephen','Brenda','Larry','Pamela','Justin','Emma','Scott','Nicole','Brandon','Helen','Frank','Samantha','Benjamin','Katherine','Gregory','Christine','Samuel','Debra','Raymond','Rachel','Patrick','Carolyn'];
+
+const LAST_NAMES = ['Smith','Johnson','Williams','Brown','Jones','Garcia','Miller','Davis','Rodriguez','Martinez','Hernandez','Lopez','Gonzalez','Wilson','Anderson','Thomas','Taylor','Moore','Jackson','Martin','Lee','Perez','Thompson','White','Harris','Sanchez','Clark','Ramirez','Lewis','Robinson','Walker','Young','Allen','King','Wright','Scott','Torres','Nguyen','Hill','Flores','Green','Adams','Nelson','Baker','Hall','Rivera','Campbell','Mitchell','Carter','Roberts','Murphy','Cook','Rogers','Morgan','Peterson','Cooper','Reed','Bailey','Bell','Gomez','Kelly','Howard','Ward','Cox','Diaz','Richardson','Wood','Watson','Brooks','Bennett','Gray','James','Reyes','Cruz','Hughes','Price','Myers','Long','Foster','Sanders','Ross','Morales','Powell','Sullivan','Russell','Ortiz','Jenkins','Gutierrez','Perry','Butler','Barnes','Fisher'];
+
+const CAR_TYPES = [
+  {make:'Subaru',     models:['Outback','Forester','Crosstrek','Ascent']},
+  {make:'Toyota',     models:['4Runner','Tacoma','RAV4','Highlander']},
+  {make:'Honda',      models:['CR-V','Pilot','Accord','Passport']},
+  {make:'Ford',       models:['Explorer','F-150','Escape','Expedition']},
+  {make:'Jeep',       models:['Grand Cherokee','Wrangler','Cherokee','Gladiator']},
+  {make:'Volvo',      models:['XC60','XC90','V60']},
+  {make:'Audi',       models:['Q5','Q7','A4']},
+  {make:'BMW',        models:['X3','X5','3 Series']},
+  {make:'Nissan',     models:['Pathfinder','Murano','Frontier']},
+  {make:'Chevrolet',  models:['Tahoe','Equinox','Silverado','Colorado']},
+  {make:'Volkswagen', models:['Tiguan','Atlas','Passat']},
+  {make:'Mazda',      models:['CX-5','CX-9','Mazda3']},
+];
+
+const COLORS = ['White','Silver','Black','Blue','Red','Gray','Green','Navy','Dark Gray'];
+
+const COLOR_HEX = {
+  White:'#d8d8d8', Silver:'#a0a0a0', Black:'#4a4a4a', Blue:'#2c6fad',
+  Red:'#c0392b', Gray:'#6c7a89', Green:'#27ae60', Navy:'#1e3a5f', 'Dark Gray':'#555',
+};
+
+function makePRNG(seed) {
+  let s = seed >>> 0;
+  return {
+    next()      { s = (Math.imul(1664525, s) + 1013904223) >>> 0; return s / 0x100000000; },
+    pick(arr)   { return arr[Math.floor(this.next() * arr.length)]; },
+    int(lo, hi) { return Math.floor(this.next() * (hi - lo + 1)) + lo; },
+    digits(n)   { return String(Math.floor(this.next() * 10**n)).padStart(n, '0'); },
+  };
+}
+
+function generateDemoRiders() {
+  const rng     = makePRNG(20260815);
+  const zipKeys = Object.keys(ZIPS);
+
+  // Weight NH (4×) and MA (3×) higher; VT, ME (2×); others (1×)
+  const weights = zipKeys.map(z => ({NH:4,MA:3,VT:2,ME:2}[ZIPS[z].state] || 1));
+  const totalW  = weights.reduce((a, b) => a + b, 0);
+  function pickZip() {
+    let r = rng.next() * totalW;
+    for (let i = 0; i < zipKeys.length; i++) { r -= weights[i]; if (r <= 0) return zipKeys[i]; }
+    return zipKeys[zipKeys.length - 1];
+  }
+
+  function plate(state) {
+    const L = 'ABCDEFGHJKLMNPRSTUVWXY';
+    const l = () => L[rng.int(0, L.length-1)];
+    const d = () => rng.int(0, 9);
+    return `${state} ${l()}${l()}${d()}${d()}-${d()}${d()}${d()}`;
+  }
+
+  const usedCodes = new Set();
+  function uniqueCode() {
+    let c; do { c = rng.digits(4); } while (usedCodes.has(c));
+    usedCodes.add(c); return c;
+  }
+
+  const riders = [];
+
+  for (let i = 0; i < 300; i++) {
+    const zip = pickZip();
+    const ct  = rng.pick(CAR_TYPES);
+    riders.push({
+      name: rng.pick(FIRST_NAMES) + ' ' + rng.pick(LAST_NAMES),
+      last4: uniqueCode(), zip, role: 'Driver',
+      carColor: rng.pick(COLORS), carMake: ct.make, carModel: rng.pick(ct.models),
+      plate: plate(ZIPS[zip].state),
+      cell: `(${ZIPS[zip].area}) 555-${rng.digits(4)}`,
+    });
+  }
+
+  for (let i = 0; i < 250; i++) {
+    riders.push({
+      name: rng.pick(FIRST_NAMES) + ' ' + rng.pick(LAST_NAMES),
+      last4: uniqueCode(), zip: pickZip(), role: 'Passenger',
+      carColor:'', carMake:'', carModel:'', plate:'', cell:'',
+    });
+  }
+
+  return riders;
+}
+
+// ============================================================
+// HAVERSINE  (miles)
+// ============================================================
+function haversine(lat1, lng1, lat2, lng2) {
+  const R    = 3958.8;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLng = (lng2 - lng1) * Math.PI / 180;
+  const a    = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)**2;
+  return R * 2 * Math.asin(Math.sqrt(a));
+}
+
+function zipDist(z1, z2) {
+  const a = ZIPS[z1], b = ZIPS[z2];
+  return (a && b) ? haversine(a.lat, a.lng, b.lat, b.lng) : Infinity;
+}
+
+// ============================================================
+// GREEDY NEAREST-ZIP MATCHING
+// ============================================================
+function assignRiders(riders) {
+  const drivers    = riders.filter(r => r.role === 'Driver');
+  const passengers = riders.filter(r => r.role === 'Passenger');
+  const available  = drivers.map(d => ({...d, _taken: false}));
+  const assignments = [];
+
+  for (const pax of passengers) {
+    let minDist = Infinity, best = -1;
+    for (let i = 0; i < available.length; i++) {
+      if (available[i]._taken) continue;
+      const d = zipDist(pax.zip, available[i].zip);
+      if (d < minDist) { minDist = d; best = i; }
+    }
+    if (best >= 0) {
+      available[best]._taken = true;
+      assignments.push({ passenger: pax, driver: available[best], distMi: minDist });
+    } else {
+      assignments.push({ passenger: pax, driver: null, distMi: null });
+    }
+  }
+
+  return { assignments, drivers, passengers };
+}
+
+// ============================================================
+// CSV PARSING  (upload mode)
+// ============================================================
+function parseCSV(text) {
+  const lines = text.trim().split(/\r?\n/).filter(l => l.trim());
+  const start = (lines[0].toLowerCase().includes('name') && lines[0].toLowerCase().includes('role')) ? 1 : 0;
+  return lines.slice(start).map(line => {
+    const c = line.split(',').map(s => s.trim().replace(/^"|"$/g, ''));
+    return { name:c[0]||'', last4:c[1]||'', zip:c[2]||'', role:c[3]||'',
+             carColor:c[4]||'', carMake:c[5]||'', carModel:c[6]||'', plate:c[7]||'', cell:c[8]||'' };
+  }).filter(r => r.name && r.last4 && r.role);
+}
+
+// ============================================================
+// CSV GENERATION  (download)
+// ============================================================
+function buildOutputCSV(assignments, drivers) {
+  const lines = ['Name,Last 4 (Card),Zip,Role,Car Color,Car Make,Car Model,License Plate,Driver Cell,Assigned Driver'];
+  const assignedDrivers = new Set(assignments.filter(a => a.driver).map(a => a.driver.last4));
+
+  for (const { passenger, driver } of assignments) {
+    if (driver) {
+      lines.push([driver.name, driver.last4, driver.zip, 'Driver',
+                  driver.carColor, driver.carMake, driver.carModel, driver.plate, driver.cell, ''].join(','));
+      lines.push([passenger.name, passenger.last4, passenger.zip, 'Passenger',
+                  '', '', '', '', '', driver.name].join(','));
+    } else {
+      lines.push([passenger.name, passenger.last4, passenger.zip, 'Passenger — UNASSIGNED',
+                  '', '', '', '', '', ''].join(','));
+    }
+  }
+
+  for (const d of drivers) {
+    if (!assignedDrivers.has(d.last4)) {
+      lines.push([d.name, d.last4, d.zip, 'Driver (solo — no passenger assigned)',
+                  d.carColor, d.carMake, d.carModel, d.plate, d.cell, ''].join(','));
+    }
+  }
+
+  return lines.join('\n');
+}
+
+// ============================================================
+// UI
+// ============================================================
+let currentMode = 'demo';
+let lastResult  = null;
+
+function setMode(mode) {
+  currentMode = mode;
+  document.getElementById('btn-demo').classList.toggle('active',   mode === 'demo');
+  document.getElementById('btn-upload').classList.toggle('active', mode === 'upload');
+  document.getElementById('demo-panel').style.display   = mode === 'demo'   ? '' : 'none';
+  document.getElementById('upload-panel').style.display = mode === 'upload' ? '' : 'none';
+  document.getElementById('results-section').style.display = 'none';
+}
+
+function handleFile(input) {
+  const f = input.files[0];
+  if (!f) return;
+  const reader = new FileReader();
+  reader.onload = e => { document.getElementById('csv-paste').value = e.target.result; };
+  reader.readAsText(f);
+}
+
+function runAssignment() {
+  let riders;
+  if (currentMode === 'demo') {
+    riders = generateDemoRiders();
+  } else {
+    const text = document.getElementById('csv-paste').value.trim();
+    if (!text) { alert('Please paste your CSV or upload a file first.'); return; }
+    riders = parseCSV(text);
+    if (!riders.length) { alert('No valid riders found. Check that your CSV matches the expected column format.'); return; }
+  }
+
+  const { assignments, drivers, passengers } = assignRiders(riders);
+  lastResult = { assignments, drivers };
+
+  renderStats(assignments, drivers, passengers);
+  renderTable(assignments);
+
+  document.getElementById('results-section').style.display = '';
+  setTimeout(() => document.getElementById('results-section').scrollIntoView({ behavior: 'smooth' }), 50);
+}
+
+function renderStats(assignments, drivers, passengers) {
+  const assigned  = assignments.filter(a => a.driver).length;
+  const unassigned = assignments.length - assigned;
+  const solo      = drivers.length - assigned;
+  const dists     = assignments.filter(a => a.distMi !== null && isFinite(a.distMi)).map(a => a.distMi);
+  const avg       = dists.length ? (dists.reduce((a,b)=>a+b,0)/dists.length).toFixed(0) : '—';
+  const max       = dists.length ? Math.max(...dists).toFixed(0) : '—';
+
+  document.getElementById('stats-grid').innerHTML = `
+    <div class="stat-card">
+      <span class="stat-label">Total Riders</span>
+      <span class="stat-val">${drivers.length + passengers.length}</span>
+      <span class="stat-sub">${drivers.length} drivers · ${passengers.length} passengers</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-label">Assigned</span>
+      <span class="stat-val">${assigned}</span>
+      <span class="stat-sub">passengers matched</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-label">Solo Drivers</span>
+      <span class="stat-val">${solo}</span>
+      <span class="stat-sub">cars with empty seat</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-label">Avg Zip Distance</span>
+      <span class="stat-val">${avg}<span style="font-size:16px;color:var(--muted)"> mi</span></span>
+      <span class="stat-sub">between home zips</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-label">Max Zip Distance</span>
+      <span class="stat-val">${max}<span style="font-size:16px;color:var(--muted)"> mi</span></span>
+      <span class="stat-sub">furthest pairing</span>
+    </div>
+    ${unassigned ? `<div class="stat-card" style="border-color:rgba(192,57,43,0.5)">
+      <span class="stat-label">Unassigned</span>
+      <span class="stat-val" style="color:#e05a4a">${unassigned}</span>
+      <span class="stat-sub">need manual placement</span>
+    </div>` : ''}
+  `;
+}
+
+function renderTable(assignments) {
+  const rows = assignments.map(({ passenger, driver, distMi }) => {
+    if (!driver) {
+      return `<tr>
+        <td>${passenger.name}</td><td class="muted">${passenger.zip}</td>
+        <td style="color:#e05a4a">UNASSIGNED</td>
+        <td>—</td><td>—</td><td>—</td><td>—</td><td>—</td>
+      </tr>`;
+    }
+    const hex  = COLOR_HEX[driver.carColor] || '#888';
+    const dist = isFinite(distMi) ? distMi.toFixed(0) + ' mi' : '—';
+    return `<tr>
+      <td>${passenger.name}</td>
+      <td class="muted">${passenger.zip}</td>
+      <td>${driver.name}</td>
+      <td class="muted">${driver.zip}</td>
+      <td class="muted">${dist}</td>
+      <td><span class="car-swatch" style="background:${hex}"></span>${driver.carColor} ${driver.carMake} ${driver.carModel}</td>
+      <td class="muted">${driver.plate}</td>
+      <td class="muted">${driver.cell}</td>
+    </tr>`;
+  });
+  document.getElementById('results-tbody').innerHTML = rows.join('');
+}
+
+function downloadCSV() {
+  if (!lastResult) return;
+  const csv  = buildOutputCSV(lastResult.assignments, lastResult.drivers);
+  const blob = new Blob([csv], {type:'text/csv'});
+  const url  = URL.createObjectURL(blob);
+  const a    = Object.assign(document.createElement('a'), {href:url, download:'MWARBH_2026_Carpool_Assignments.csv'});
+  a.click();
+  URL.revokeObjectURL(url);
+}
+</script>
+</body>
+</html>
