@@ -33,6 +33,7 @@
     <button class="tab-btn" data-tab="weather">Weather</button>
     <button class="tab-btn" data-tab="info">Race Info</button>
     <button class="tab-btn" data-tab="register">Register</button>
+    <button class="tab-btn" data-tab="ridedown">Ride Down</button>
     <button class="tab-btn" data-tab="merch">Merch</button>
     <button class="tab-btn" data-tab="sponsors">Sponsors</button>
   </nav>
@@ -254,6 +255,39 @@
             </ul>
           </div>
         </div>
+      </div>
+    </section>
+
+    <!-- ==================== RIDE DOWN ==================== -->
+    <section id="tab-ridedown" class="tab-panel">
+      <div class="ridedown-wrap">
+
+        <div class="ridedown-header">
+          <h2>Ride Down</h2>
+          <p class="ridedown-lead">You rode up. Now find your car. Enter the last 4 digits of the credit card you used to register on BikeReg.</p>
+        </div>
+
+        <div class="ridedown-lookup">
+          <div class="lookup-card">
+            <div class="lookup-card-label">Credit Card &mdash; Last 4 Digits</div>
+            <div class="lookup-card-prefix">&bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull;</div>
+            <div class="pin-entry" id="pin-entry">
+              <input type="tel" class="pin-box" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off" aria-label="Digit 1" />
+              <input type="tel" class="pin-box" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off" aria-label="Digit 2" />
+              <input type="tel" class="pin-box" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off" aria-label="Digit 3" />
+              <input type="tel" class="pin-box" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="off" aria-label="Digit 4" />
+            </div>
+            <button class="cta-btn lookup-submit-btn" onclick="lookupRider()">Find My Ride</button>
+            <p class="lookup-demo-note">Demo &mdash; try <strong>3847</strong> (passenger) or <strong>7291</strong> (driver)</p>
+          </div>
+        </div>
+
+        <div id="ridedown-result" class="ridedown-result" style="display:none;"></div>
+
+        <div class="ridedown-note">
+          <p>Assignments are final. Questions? Find a race official at the summit or call Race Ops: <strong>(603) 555-0100</strong>.</p>
+        </div>
+
       </div>
     </section>
 
